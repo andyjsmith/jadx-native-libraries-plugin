@@ -24,9 +24,9 @@ public class NativeMethod extends NativeObject {
 	private final boolean isOverloaded;
 	private final String name;
 	private final NativeClass parent;
-	@Nullable String signature;
-	@Nullable JavaMethod javaMethod;
-	@Nullable List<String> parameters;
+	private @Nullable String signature;
+	final @Nullable JavaMethod javaMethod;
+	private @Nullable List<String> parameters;
 
 	public NativeMethod(@NotNull String name, NativeClass parent, @Nullable String rawSignature) throws IllegalArgumentException {
 		this.parent = parent;
@@ -222,7 +222,7 @@ public class NativeMethod extends NativeObject {
 				case 'D': // double
 					parameter.append("double");
 					break;
-				case 'v': // void
+				case 'V': // void
 					parameter.append("void");
 					break;
 				case 'L': // class
@@ -253,7 +253,7 @@ public class NativeMethod extends NativeObject {
 
 	/// Join the parameters into a single string, or null if there are none
 	@Nullable
-	public String getParametersString() throws DecodeException {
+	public String getParametersString() {
 		List<String> parameters = getParameters();
 		if (parameters == null || parameters.isEmpty()) return null;
 
@@ -268,11 +268,7 @@ public class NativeMethod extends NativeObject {
 	public String toString() {
 		String name = getName();
 		if (signature != null) {
-			try {
-				name += "(" + getParametersString() + ")";
-			} catch (DecodeException ignored) {
-				LOG.warn("Could not decode signature: {}", signature);
-			}
+			name += "(" + getParametersString() + ")";
 		}
 		return name;
 	}

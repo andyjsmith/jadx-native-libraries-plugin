@@ -39,9 +39,9 @@ import java.util.List;
 public class PluginDialog extends JDialog {
 	private static final Logger LOG = LoggerFactory.getLogger(PluginDialog.class);
 
-	JadxPluginContext context;
-	PluginOptions options;
-	JTree tree;
+	private final JadxPluginContext context;
+	private final PluginOptions options;
+	private final JTree tree;
 
 	public PluginDialog(JFrame parent, JadxPluginContext context, PluginOptions options) {
 		super(parent, "Native Libraries", false);
@@ -222,9 +222,7 @@ public class PluginDialog extends JDialog {
 					progressDialog.setMessage("Checking project");
 					ghidra.checkSuccess(process);
 					progressDialog.setMessage("Launching Ghidra");
-					ghidra.launchGhidra(project).thenAccept(launchProcess -> {
-						progressDialog.close();
-					});
+					ghidra.launchGhidra(project).thenAccept(launchProcess -> progressDialog.close());
 				} catch (IOException | ConcurrentModificationException e) {
 					progressDialog.close();
 					showErrorMessage("Could not launch Ghidra: " + e.getMessage());

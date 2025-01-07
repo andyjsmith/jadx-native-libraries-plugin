@@ -6,7 +6,7 @@ import jadx.gui.settings.JadxSettings;
 import jadx.gui.ui.MainWindow;
 
 public class PluginOptions extends BasePluginOptionsBuilder {
-	JadxPluginContext context;
+	private final JadxPluginContext context;
 	private String ghidraPath;
 
 	public PluginOptions(JadxPluginContext context) {

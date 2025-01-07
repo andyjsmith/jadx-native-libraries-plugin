@@ -23,7 +23,7 @@ public class NativeRoot extends NativeObject {
 	private static final Logger LOG = LoggerFactory.getLogger(NativeRoot.class);
 	private final List<NativeLibrary> libraries = new ArrayList<>();
 
-	JadxPluginContext context;
+	private final JadxPluginContext context;
 
 	public NativeRoot(final JadxPluginContext context) {
 		this.context = context;

@@ -1,6 +1,5 @@
 package org.ajsmith.jadx.plugins.nativelibraries;
 
-import jadx.core.utils.exceptions.DecodeException;
 import org.ajsmith.jadx.plugins.nativelibraries.components.NativeClass;
 import org.ajsmith.jadx.plugins.nativelibraries.components.NativeLibrary;
 import org.ajsmith.jadx.plugins.nativelibraries.components.NativeMethod;
@@ -17,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NativeMethodTest {
 
 	@Test
-	public void testNativeMethod() throws URISyntaxException, DecodeException {
+	public void testNativeMethod() throws URISyntaxException {
 		NativeRoot root = loadSampleFile("libddgcrypto.so");
 		NativeLibrary lib = root.getLibraries()[0];
 		NativePackage pkg = lib.getPackageByName("com");
@@ -73,5 +72,21 @@ public class NativeMethodTest {
 		assertThat(NativeMethod.unescapeName("a1_026d4")).isEqualTo("a1⛔");
 		assertThat(NativeMethod.unescapeName("a1_026d4_026d4_1_2_3__")).isEqualTo("a1⛔⛔_;[//");
 		assertThat(NativeMethod.unescapeName("com_a_b_c__1d")).isEqualTo("com/a/b/c/_d");
+	}
+
+	@Test
+	public void testNativeMethodSignature() {
+		assertThat(new NativeMethod("test", null, "ZBCSIJFDV").getParametersString()).isEqualTo("boolean, byte, char, short, int, long, float, double, void");
+		assertThat(new NativeMethod("test", null, "ZBCSIJFDV").toString()).isEqualTo("test(boolean, byte, char, short, int, long, float, double, void)");
+		assertThat(new NativeMethod("test", null, "Lcom/foo/bar/Baz;").getParametersString()).isEqualTo("com.foo.bar.Baz");
+		assertThat(new NativeMethod("test", null, "Lcom/foo/bar/Ba_1z;").getParametersString()).isEqualTo("com.foo.bar.Ba_z");
+		assertThat(new NativeMethod("test", null, "Lcom/foo/bar/Ba_00041z;").getParametersString()).isEqualTo("com.foo.bar.BaAz");
+		assertThat(new NativeMethod("test", null, "[[[C").getParametersString()).isEqualTo("char[][][]");
+		assertThat(new NativeMethod("test", null, "[[[C[[Lcom/foo/bar/Baz;[D").getParametersString()).isEqualTo("char[][][], com.foo.bar.Baz[][], double[]");
+
+		// Malformed
+		assertThat(new NativeMethod("test", null, "Lcom/foo/bar/Baz").getParametersString()).isNull();
+		assertThat(new NativeMethod("test", null, "[L").getParametersString()).isNull();
+		assertThat(new NativeMethod("test", null, "[L").toString()).isEqualTo("test(null)");
 	}
 }
