@@ -74,7 +74,7 @@ public class NativeLibrary extends NativeObject {
 
 		// Unescape and get name parts
 		List<String> nameParts = List.of(NativeMethod.unescapeName(rawMethodName).split("/"));
-		String methodName = nameParts.getLast();
+		String methodName = nameParts.get(nameParts.size() - 1);
 		String className = nameParts.get(nameParts.size() - 2);
 		String packageName = String.join(".", nameParts.subList(0, nameParts.size() - 2));
 

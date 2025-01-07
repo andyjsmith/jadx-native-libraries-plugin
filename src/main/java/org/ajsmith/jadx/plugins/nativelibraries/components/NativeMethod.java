@@ -156,7 +156,7 @@ public class NativeMethod extends NativeObject {
 		}
 
 		if (getParameters() == null) {
-			return methods.getFirst();
+			return methods.get(0);
 		}
 
 		for (JavaMethod method : methods) {

@@ -101,14 +101,14 @@ public class NativePackage extends NativeObject {
 
 	public List<TreeNode> getChildrenCompacted() {
 		if (canBeCompacted()) {
-			return getSubPackages().getFirst().getChildrenCompacted();
+			return getSubPackages().get(0).getChildrenCompacted();
 		}
 		return getChildren();
 	}
 
 	public String getNameCompacted() {
 		if (canBeCompacted()) {
-			return getName() + "." + getSubPackages().getFirst().getNameCompacted();
+			return getName() + "." + getSubPackages().get(0).getNameCompacted();
 		}
 		return getName();
 	}
