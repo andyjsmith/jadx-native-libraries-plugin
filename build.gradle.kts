@@ -21,6 +21,10 @@ dependencies {
 	compileOnly("io.github.skylot:jadx-gui:$jadxVersion") {
 		isChanging = isJadxSnapshot
 	}
+	// don't know why I need this, but tests fail otherwise
+	testRuntimeOnly("io.github.skylot:jadx-gui:$jadxVersion") {
+		isChanging = isJadxSnapshot
+	}
 	compileOnly("io.github.skylot:jadx-cli:$jadxVersion") {
 		isChanging = isJadxSnapshot
 	}
