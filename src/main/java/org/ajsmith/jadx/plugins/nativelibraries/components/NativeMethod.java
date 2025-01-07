@@ -141,17 +141,17 @@ public class NativeMethod extends NativeObject {
 
 		JavaPackage pkg = packages.stream().filter(p -> p.getRawFullName().equals(getCls().getPkg().getFullName())).findFirst().orElse(null);
 		if (pkg == null) {
-			LOG.warn("Package {} not found", getCls().getPkg().getFullName());
+			LOG.debug("Package {} not found", getCls().getPkg().getFullName());
 			return null;
 		}
 		JavaClass cls = pkg.getClasses().stream().filter(c -> c.getRawName().equals(getCls().getFullName())).findFirst().orElse(null);
 		if (cls == null) {
-			LOG.warn("Class {} not found", getCls().getFullName());
+			LOG.debug("Class {} not found", getCls().getFullName());
 			return null;
 		}
 		List<JavaMethod> methods = cls.getMethods().stream().filter(m -> m.getFullName().equals(getFullName())).collect(Collectors.toList());
 		if (methods.isEmpty()) {
-			LOG.warn("Method {} not found", getFullName());
+			LOG.debug("Method {} not found", getFullName());
 			return null;
 		}
 
