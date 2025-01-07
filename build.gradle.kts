@@ -18,7 +18,7 @@ dependencies {
 	compileOnly("io.github.skylot:jadx-core:$jadxVersion") {
 		isChanging = isJadxSnapshot
 	}
-	implementation("io.github.skylot:jadx-gui:$jadxVersion") {
+	compileOnly("io.github.skylot:jadx-gui:$jadxVersion") {
 		isChanging = isJadxSnapshot
 	}
 	compileOnly("io.github.skylot:jadx-cli:$jadxVersion") {
