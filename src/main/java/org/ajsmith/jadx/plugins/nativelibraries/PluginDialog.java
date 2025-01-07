@@ -1,16 +1,11 @@
 package org.ajsmith.jadx.plugins.nativelibraries;
 
 import jadx.api.JavaMethod;
-import jadx.api.ResourceFile;
 import jadx.api.plugins.JadxPluginContext;
 import jadx.gui.treemodel.JNode;
 import jadx.gui.ui.MainWindow;
 import jadx.gui.ui.dialog.UsageDialog;
-import jadx.gui.ui.filedialog.FileDialogWrapper;
-import jadx.gui.ui.filedialog.FileOpenMode;
-import org.ajsmith.jadx.plugins.nativelibraries.components.NativeLibrary;
 import org.ajsmith.jadx.plugins.nativelibraries.components.NativeMethod;
-import org.ajsmith.jadx.plugins.nativelibraries.components.NativeObject;
 import org.ajsmith.jadx.plugins.nativelibraries.components.NativeRoot;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -18,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -29,12 +23,6 @@ import javax.swing.tree.TreePath;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.ConcurrentModificationException;
-import java.util.List;
 
 public class PluginDialog extends JDialog {
 	private static final Logger LOG = LoggerFactory.getLogger(PluginDialog.class);
@@ -68,19 +56,6 @@ public class PluginDialog extends JDialog {
 		JScrollPane scrollPane = new JScrollPane(tree);
 		JPanel buttonPanel = new JPanel();
 		add(scrollPane);
-
-		JButton openInGhidraBtn = new JButton("Open in Ghidra");
-		openInGhidraBtn.setEnabled(false);
-		openInGhidraBtn.addActionListener(e -> {
-			if (options.getGhidraPath().isEmpty()) {
-				showGhidraFilePicker();
-				return;
-			}
-
-			TreeNode selected = (TreeNode) tree.getLastSelectedPathComponent();
-			if (!(selected instanceof NativeObject)) return;
-			openInGhidra(((NativeObject) selected).getLibrary());
-		});
 
 		JButton goToMethodBtn = new JButton("Go to Method");
 		goToMethodBtn.setEnabled(false);
@@ -131,7 +106,6 @@ public class PluginDialog extends JDialog {
 
 		tree.addTreeSelectionListener(e -> {
 			TreeNode selectedNode = (TreeNode) tree.getLastSelectedPathComponent();
-			openInGhidraBtn.setEnabled(selectedNode != null);
 			if (selectedNode == null) return;
 
 			boolean isJniMethod = selectedNode instanceof NativeMethod;
@@ -139,7 +113,6 @@ public class PluginDialog extends JDialog {
 			findUsageBtn.setEnabled(isJniMethod);
 		});
 
-		buttonPanel.add(openInGhidraBtn);
 		buttonPanel.add(goToMethodBtn);
 		buttonPanel.add(findUsageBtn);
 		buttonPanel.add(closeBtn);
@@ -174,65 +147,6 @@ public class PluginDialog extends JDialog {
 			message = "Method '" + ((NativeMethod) node).getFullName() + "' not found. It may be unused.";
 		}
 		JOptionPane.showMessageDialog(this, message);
-	}
-
-	private void showGhidraFilePicker() {
-		if (context.getGuiContext() == null) return;
-		MainWindow mw = (MainWindow) context.getGuiContext().getMainFrame();
-		FileDialogWrapper fd = new FileDialogWrapper(mw, FileOpenMode.CUSTOM_OPEN);
-		fd.setTitle("Select Ghidra");
-		fd.setFileExtList(Arrays.asList("launch.sh", "launch.bat"));
-		fd.setSelectionMode(JFileChooser.FILES_ONLY);
-		List<Path> files = fd.show();
-		if (files.size() == 1) {
-			String ghidraPath = files.get(0).toAbsolutePath().toString();
-			LOG.info("Set Ghidra path to: {}", ghidraPath);
-			options.setGhidraPath(ghidraPath);
-		}
-	}
-
-	private void openInGhidra(@Nullable NativeLibrary library) {
-		if (library == null) return;
-		String ghidraPath = options.getGhidraPath();
-		if (ghidraPath == null || ghidraPath.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "You must set the path to your Ghidra installation.", "Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		try {
-			ResourceFile resourceFile = library.getResourceFile();
-			final String projectName = "project123";
-			final Path projectContainerDir = Path.of("C:\\test");
-			final Path projectDir = Path.of(projectContainerDir.toString(), projectName);
-			final Path libOutputPath = Path.of(projectDir.toString(), resourceFile.getOriginalName().replace("/", "_").replace("\\", "_"));
-
-			// Create dirs if they don't exist
-			Files.createDirectories(projectDir);
-
-			// Export library to file
-			library.saveToFile(libOutputPath.toString());
-
-			Ghidra ghidra = new Ghidra(ghidraPath);
-			Ghidra.Project project = new Ghidra.Project(projectDir, projectName);
-
-			ProgressDialog progressDialog = new ProgressDialog(this, "Analyzing " + resourceFile.getOriginalName());
-			progressDialog.setVisible(true);
-			ghidra.importFile(project, libOutputPath.toString()).thenAccept(process -> {
-				try {
-					progressDialog.setMessage("Checking project");
-					ghidra.checkSuccess(process);
-					progressDialog.setMessage("Launching Ghidra");
-					ghidra.launchGhidra(project).thenAccept(launchProcess -> progressDialog.close());
-				} catch (IOException | ConcurrentModificationException e) {
-					progressDialog.close();
-					showErrorMessage("Could not launch Ghidra: " + e.getMessage());
-				}
-			});
-
-
-		} catch (IOException e) {
-			showErrorMessage("Could not open Ghidra: " + e.getMessage());
-		}
 	}
 
 	private void showErrorMessage(String message) {

@@ -10,8 +10,7 @@ public class NativeLibrariesPlugin implements JadxPlugin {
 	public static final String PLUGIN_ID = "native-libraries-plugin";
 	private static final String DESCRIPTION = "Get information about the native JNI (.so) libraries in the APK.\n\n" +
 			"View all of the methods defined in the native libraries included in the APK.\n" +
-			"Jump to each method's Java definition and find usages.\n" +
-			"Quickly open each library in Ghidra for further reverse engineering.";
+			"Jump to each method's Java definition and find usages.";
 
 	private PluginOptions options;
 

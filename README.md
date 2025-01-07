@@ -6,6 +6,8 @@ Get information about the native JNI (.so) libraries in the APK.
 - View all the JNI methods defined in the native libraries included in the APK.
 - Jump to each method's Java definition and find usages.
 
+![Screenshot](screenshots/dialog.png)
+
 
 Install using location id: `github:andyjsmith:jadx-native-libraries-plugin`
 
