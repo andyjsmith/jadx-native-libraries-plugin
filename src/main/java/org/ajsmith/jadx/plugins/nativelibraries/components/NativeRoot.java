@@ -3,6 +3,7 @@ package org.ajsmith.jadx.plugins.nativelibraries.components;
 import jadx.api.ResourceFile;
 import jadx.api.ResourceType;
 import jadx.api.plugins.JadxPluginContext;
+import jadx.api.plugins.gui.JadxGuiContext;
 import net.fornwall.jelf.ElfFile;
 import net.fornwall.jelf.ElfSymbol;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 
 public class NativeRoot extends NativeObject {
 	private static final Logger LOG = LoggerFactory.getLogger(NativeRoot.class);
@@ -75,6 +77,11 @@ public class NativeRoot extends NativeObject {
 	@Override
 	public JadxPluginContext getContext() {
 		return context;
+	}
+
+	@Override
+	public @NotNull JadxGuiContext getGuiContext() {
+		return Objects.requireNonNull(context.getGuiContext());
 	}
 
 	@Override

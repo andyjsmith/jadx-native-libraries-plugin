@@ -3,7 +3,6 @@ package org.ajsmith.jadx.plugins.nativelibraries.components;
 import jadx.api.ResourceFile;
 import jadx.api.ResourcesLoader;
 import jadx.core.utils.exceptions.JadxException;
-import jadx.gui.utils.UiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +16,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class NativeLibrary extends NativeObject {
-	private static final ImageIcon SO_ICON = UiUtils.openSvgIcon("nodes/binaryFile");
 	private final String libraryName;
 	private final NativeRoot root;
 	private final List<NativePackage> packages = new ArrayList<>();
@@ -144,7 +142,7 @@ public class NativeLibrary extends NativeObject {
 
 	@Override
 	public @NotNull ImageIcon getIcon() {
-		return SO_ICON;
+		return root.getGuiContext().getSVGIcon("nodes/binaryFile");
 	}
 
 	@Override

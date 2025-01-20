@@ -2,9 +2,6 @@ package org.ajsmith.jadx.plugins.nativelibraries;
 
 import jadx.api.JavaMethod;
 import jadx.api.plugins.JadxPluginContext;
-import jadx.gui.treemodel.JNode;
-import jadx.gui.ui.MainWindow;
-import jadx.gui.ui.dialog.UsageDialog;
 import org.ajsmith.jadx.plugins.nativelibraries.components.NativeMethod;
 import org.ajsmith.jadx.plugins.nativelibraries.components.NativeRoot;
 import org.jetbrains.annotations.Nullable;
@@ -65,7 +62,6 @@ public class PluginDialog extends JDialog {
 		findUsageBtn.setEnabled(false);
 		findUsageBtn.addActionListener(e -> {
 			if (context.getGuiContext() == null) return;
-			MainWindow mw = (MainWindow) context.getGuiContext().getMainFrame();
 
 			TreeNode treeNode = (TreeNode) tree.getLastSelectedPathComponent();
 			if (!(treeNode instanceof NativeMethod)) return;
@@ -76,10 +72,7 @@ public class PluginDialog extends JDialog {
 				showMethodNotFoundDialog(treeNode);
 				return;
 			}
-
-			JNode node = mw.getCacheObject().getNodeCache().makeFrom(javaMethod);
-			if (node == null) return;
-			new UsageDialog(mw, node).setVisible(true);
+			context.getGuiContext().openUsageDialog(javaMethod.getCodeNodeRef());
 		});
 
 		JButton closeBtn = new JButton("Close");
