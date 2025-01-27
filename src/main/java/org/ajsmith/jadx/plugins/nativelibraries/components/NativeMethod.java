@@ -4,7 +4,6 @@ import jadx.api.JavaClass;
 import jadx.api.JavaMethod;
 import jadx.api.JavaPackage;
 import jadx.core.utils.exceptions.DecodeException;
-import jadx.gui.utils.Icons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -275,7 +274,7 @@ public class NativeMethod extends NativeObject {
 
 	@Override
 	public @Nullable ImageIcon getIcon() {
-		return Icons.METHOD;
+		return getGuiContext().getSVGIcon("nodes/method");
 	}
 
 	@Override

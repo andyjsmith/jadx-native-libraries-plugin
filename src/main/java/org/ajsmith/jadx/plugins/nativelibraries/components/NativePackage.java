@@ -1,6 +1,5 @@
 package org.ajsmith.jadx.plugins.nativelibraries.components;
 
-import jadx.gui.utils.Icons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -115,7 +114,7 @@ public class NativePackage extends NativeObject {
 
 	@Override
 	public @NotNull ImageIcon getIcon() {
-		return Icons.PACKAGE;
+		return getGuiContext().getSVGIcon("nodes/package");
 	}
 
 	@Override

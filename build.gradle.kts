@@ -11,21 +11,11 @@ plugins {
 }
 
 dependencies {
-	val jadxVersion = "1.5.1"
+	val jadxVersion = "1.5.2-SNAPSHOT"
 	val isJadxSnapshot = jadxVersion.endsWith("-SNAPSHOT")
 
 	// use compile only scope to exclude jadx-core and its dependencies from result jar
 	compileOnly("io.github.skylot:jadx-core:$jadxVersion") {
-		isChanging = isJadxSnapshot
-	}
-	compileOnly("io.github.skylot:jadx-gui:$jadxVersion") {
-		isChanging = isJadxSnapshot
-	}
-	// don't know why I need this, but tests fail otherwise
-	testRuntimeOnly("io.github.skylot:jadx-gui:$jadxVersion") {
-		isChanging = isJadxSnapshot
-	}
-	compileOnly("io.github.skylot:jadx-cli:$jadxVersion") {
 		isChanging = isJadxSnapshot
 	}
 
