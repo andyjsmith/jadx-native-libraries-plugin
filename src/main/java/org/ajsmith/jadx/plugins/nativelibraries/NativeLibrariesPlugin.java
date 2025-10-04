@@ -20,7 +20,7 @@ public class NativeLibrariesPlugin implements JadxPlugin {
 				.name("Native Library Info")
 				.description(DESCRIPTION)
 				.homepage("https://github.com/andyjsmith/jadx-native-libraries-plugin")
-				.requiredJadxVersion("1.5.2, r2372")
+				.requiredJadxVersion("1.5.2, r2472")
 				.build();
 	}
 
