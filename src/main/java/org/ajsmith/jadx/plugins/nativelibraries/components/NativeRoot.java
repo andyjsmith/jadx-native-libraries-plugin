@@ -6,6 +6,7 @@ import jadx.api.plugins.JadxPluginContext;
 import jadx.api.plugins.gui.JadxGuiContext;
 import net.fornwall.jelf.ElfFile;
 import net.fornwall.jelf.ElfSymbol;
+import net.fornwall.jelf.ElfSymbolTableSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -48,7 +49,14 @@ public class NativeRoot extends NativeObject {
 
 		// Parse symbols to find exported methods
 		ElfFile elf = ElfFile.from(bytes);
-		for (ElfSymbol symbol : elf.getDynamicSymbolTableSection().symbols) {
+
+		ElfSymbolTableSection dynSymSection = elf.getDynamicSymbolTableSection();
+		if (dynSymSection == null) {
+			LOG.debug("No dynamic symbol table section was found");
+			return;
+		}
+
+		for (ElfSymbol symbol : dynSymSection.symbols) {
 			String name = symbol.getName();
 			if (!NativeMethod.isJavaMethod(name)) continue;
 
