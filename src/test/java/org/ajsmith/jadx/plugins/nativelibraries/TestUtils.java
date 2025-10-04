@@ -1,5 +1,7 @@
 package org.ajsmith.jadx.plugins.nativelibraries;
 
+import jadx.api.JadxArgs;
+import jadx.api.JadxDecompiler;
 import jadx.api.ResourceFile;
 import jadx.api.ResourceType;
 import org.ajsmith.jadx.plugins.nativelibraries.components.NativeLibrary;
@@ -13,7 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUtils {
 	protected static NativeLibrary createMockLibrary() {
-		return new NativeLibrary(ResourceFile.createResourceFile(null, "lib.so", ResourceType.LIB), null);
+		JadxArgs args = new JadxArgs();
+		JadxDecompiler jadx = new JadxDecompiler(args);
+		return new NativeLibrary(ResourceFile.createResourceFile(jadx, "lib.so", ResourceType.LIB), null);
 	}
 
 	protected static File getSampleFile(String fileName) throws URISyntaxException {
