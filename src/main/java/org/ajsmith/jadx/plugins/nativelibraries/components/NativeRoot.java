@@ -50,7 +50,14 @@ public class NativeRoot extends NativeObject {
 		}
 
 		// Parse symbols to find exported methods
-		ElfFile elf = ElfFile.from(bytes);
+		ElfFile elf;
+		try {
+			elf = ElfFile.from(bytes);
+		} catch (ElfException e) {
+			LOG.debug("Error loading ELF file", e);
+			library.setErrorMessage(e.getMessage());
+			return;
+		}
 
 		ElfSymbolTableSection dynSymSection;
 		try {
