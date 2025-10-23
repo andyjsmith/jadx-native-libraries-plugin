@@ -1,5 +1,6 @@
 package org.ajsmith.jadx.plugins.nativelibraries;
 
+import org.ajsmith.jadx.plugins.nativelibraries.components.NativeLibrary;
 import org.ajsmith.jadx.plugins.nativelibraries.components.NativeMethod;
 import org.ajsmith.jadx.plugins.nativelibraries.components.NativeObject;
 
@@ -24,6 +25,11 @@ public class NativeLibrariesTreeCellRenderer extends DefaultTreeCellRenderer {
 		if (node instanceof NativeMethod && ((NativeMethod) node).getJavaMethod() == null) {
 			// Give a visual indication to methods without a Java definition
 			setText("<html><i>" + value + "</i></html>");
+			setForeground(UIManager.getColor("textInactiveText"));
+		}
+
+		if (node instanceof NativeLibrary && ((NativeLibrary) node).getErrorMessage() != null) {
+			setText("<html><i>" + value + " <font color=red>(couldn't parse ELF: " + ((NativeLibrary) node).getErrorMessage() + ")</font></i></html>");
 			setForeground(UIManager.getColor("textInactiveText"));
 		}
 

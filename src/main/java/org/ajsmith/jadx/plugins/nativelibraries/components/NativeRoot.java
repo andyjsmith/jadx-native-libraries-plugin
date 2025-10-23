@@ -4,6 +4,7 @@ import jadx.api.ResourceFile;
 import jadx.api.ResourceType;
 import jadx.api.plugins.JadxPluginContext;
 import jadx.api.plugins.gui.JadxGuiContext;
+import net.fornwall.jelf.ElfException;
 import net.fornwall.jelf.ElfFile;
 import net.fornwall.jelf.ElfSymbol;
 import net.fornwall.jelf.ElfSymbolTableSection;
@@ -43,16 +44,26 @@ public class NativeRoot extends NativeObject {
 		try {
 			bytes = library.getBytes();
 		} catch (IOException e) {
-			LOG.error("Error decoding resource", e);
+			LOG.debug("Error decoding resource", e);
+			library.setErrorMessage(e.getMessage());
 			return;
 		}
 
 		// Parse symbols to find exported methods
 		ElfFile elf = ElfFile.from(bytes);
 
-		ElfSymbolTableSection dynSymSection = elf.getDynamicSymbolTableSection();
+		ElfSymbolTableSection dynSymSection;
+		try {
+			dynSymSection = elf.getDynamicSymbolTableSection();
+		} catch (ElfException e) {
+			LOG.debug("Error parsing dynamic symbol table", e);
+			library.setErrorMessage(e.getMessage());
+			return;
+		}
+
 		if (dynSymSection == null) {
 			LOG.debug("No dynamic symbol table section was found");
+			library.setErrorMessage("No dynamic symbol table section was found");
 			return;
 		}
 

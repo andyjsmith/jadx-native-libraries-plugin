@@ -20,6 +20,7 @@ public class NativeLibrary extends NativeObject {
 	private final NativeRoot root;
 	private final List<NativePackage> packages = new ArrayList<>();
 	private final ResourceFile resourceFile;
+	private @Nullable String errorMessage = null;
 
 	public NativeLibrary(ResourceFile resourceFile, NativeRoot root) {
 		this(resourceFile, root, resourceFile.getOriginalName());
@@ -129,6 +130,14 @@ public class NativeLibrary extends NativeObject {
 			pkg.addClass(cls);
 		}
 		return cls;
+	}
+
+	public @Nullable String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(@Nullable String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 
 	@Override
